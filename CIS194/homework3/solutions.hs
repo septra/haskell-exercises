@@ -1,3 +1,6 @@
+-- Relevant for Exercise 3
+import qualified Data.Map as Map
+import Data.Char
 
 -- Exercise 1
 skips :: [a] -> [[a]]
@@ -26,6 +29,26 @@ localMaxima _ = []
 
 
 -- Exercise 3
+-- Imports already done at the top level
+--import qualified Data.Map as Map
+--import Data.Char
+
+{- 
+   The solution involves building a map of the elements that have been passed 
+   passed in a list and their corresponding counts. 
+
+   The number of lines above the baseline is determined by extracting the highest count
+   in the previous map with the function `nLines`
+
+   Then, the recursive function `buildLines` builds each horizontal line of the 
+   histogram starting with the topmost one and recursively appending every subsequent line.
+
+   The lines are built by folding the elements of [0..9], corresponding to the x-axis digits.
+   If the fold element is present in the `filterMap` (to check whether the digit's count
+   is >= the stack position of the line being constructed) then a "*" is returned otherwise a " ".
+   `filterMap` keeps only those elements in the map, whose value-count is >= the line number)
+-}
+
 elemCounts :: [Int] -> Map.Map Int Int
 elemCounts = Map.fromListWith (\x y -> x + y) . map (\x -> (x,1))
 
