@@ -1,20 +1,24 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeSynonymInstances #-}
+
 module Calc where
 
-import ExprT
 import Parser
+import qualified ExprT   as E
+import qualified StackVM as S
 
 -- Exercise 1
-eval :: ExprT -> Integer
-eval (Lit x)   = x
-eval (Add x y) = eval x + eval y
-eval (Mul x y) = eval x * eval y
+eval :: E.ExprT -> Integer
+eval (E.Lit x)   = x
+eval (E.Add x y) = eval x + eval y
+eval (E.Mul x y) = eval x * eval y
 
 -- End Exercise 1
 
 
 -- Exercise 2
 evalStr :: String -> Maybe Integer
-evalStr exp = case parseExp Lit Add Mul exp of 
+evalStr exp = case parseExp E.Lit E.Add E.Mul exp of 
                 Just x  -> Just (eval x)
                 Nothing -> Nothing 
 
@@ -30,10 +34,10 @@ class Expr a where
     mul :: a -> a -> a 
 
 
-instance Expr ExprT where
-    lit x   = Lit x
-    add x y = Add x y
-    mul x y = Mul x y
+instance Expr E.ExprT where
+    lit x   = E.Lit x
+    add x y = E.Add x y
+    mul x y = E.Mul x y
 
 -- End Exercise 3
 
@@ -65,5 +69,16 @@ instance Expr Mod7 where
     add (Mod7 x) (Mod7 y) = Mod7 $ mod (x + y) 7
     mul (Mod7 x) (Mod7 y) = Mod7 $ mod (x * y) 7
 
--- End Exercise 3
+-- End Exercise 4
 
+
+-- Exercise 5
+instance Expr S.Program where 
+    lit x   = [S.PushI x]
+    add x y = x ++ y ++ [S.Add]
+    mul x y = x ++ y ++ [S.Mul]
+
+compile :: String -> Maybe S.Program
+compile str = parseExp lit add mul str
+
+-- End Exercise 6
