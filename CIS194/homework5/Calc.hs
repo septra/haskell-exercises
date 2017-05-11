@@ -81,4 +81,4 @@ instance Expr S.Program where
 compile :: String -> Maybe S.Program
 compile str = parseExp lit add mul str
 
--- End Exercise 6
+-- End Exercise 5
